@@ -5,6 +5,8 @@
 This example shows how to use [MariaDB MaxScale](https://mariadb.com/docs/products/mariadb-maxscale/) as a database proxy to load balance writes to
 primary servers and reads to replicas.
 
+![MariaDB MaxScale database proxy](https://repository-images.githubusercontent.com/558545499/2696d4ed-f270-4ef5-9c97-7516e7ac6f2c)
+
 ## Set up the database using Docker
 
 Clone the following repository which contains Docker files to set up MariaDB replication and MaxScale:
