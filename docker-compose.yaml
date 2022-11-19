@@ -1,13 +1,13 @@
 version: "3.9"
 services:
-  node01:
+  mariadb1:
     image: alejandrodu/mariadb-primary
     ports:
       - 3306:3306
     networks:
       network:
         ipv4_address: 192.0.0.10
-  node02:
+  mariadb2:
     image: alejandrodu/mariadb-replica
     command: --server_id 2
     environment:
@@ -17,7 +17,7 @@ services:
     networks:
       network:
         ipv4_address: 192.0.0.11
-  node03:
+  mariadb3:
     image: alejandrodu/mariadb-replica
     command: --server_id 3
     environment:
@@ -31,9 +31,9 @@ services:
     image: alejandrodu/mariadb-maxscale
     command: --admin_host 0.0.0.0 --admin_secure_gui false
     depends_on:
-      - node01
-      - node02
-      - node03
+      - mariadb1
+      - mariadb2
+      - mariadb3
     environment:
       MARIADB_HOST_1: 192.0.0.10
       MARIADB_HOST_2: 192.0.0.11

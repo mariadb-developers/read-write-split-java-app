@@ -20,12 +20,12 @@ public class PersonService implements CrudListener<Person> {
 
 	@Override
 	public Person add(Person person) {
-		return repository.save(person);
+		return repository.save(person.getId(), person.getName(), person.getCreditCardNumber());
 	}
 
 	@Override
 	public Person update(Person person) {
-		return repository.save(person);
+		return repository.save(person.getId(), person.getName(), person.getCreditCardNumber());
 	}
 
 	@Override
