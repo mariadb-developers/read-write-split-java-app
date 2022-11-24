@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(propagation = Propagation.SUPPORTS)
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
 	@Override
@@ -17,7 +18,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 			FROM person
 			WHERE id=:id
 			""")
-	@Transactional(propagation = Propagation.SUPPORTS)
+
 	Optional<Person> findById(@Param("id") Long id);
 
 	@Override
@@ -25,12 +26,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 			SELECT id, name, credit_card_number, write_server_id, @@server_id AS read_server_id
 			FROM person
 			""")
-	@Transactional(propagation = Propagation.SUPPORTS)
 	List<Person> findAll();
-
-	@Override
-	@Transactional(propagation = Propagation.SUPPORTS)
-	long count();
 
 	@Query(nativeQuery = true, value = """
 			INSERT INTO person(id, name, credit_card_number, write_server_id)
