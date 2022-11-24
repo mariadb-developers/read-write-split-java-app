@@ -7,7 +7,7 @@ primary servers and reads to replicas.
 
 ![MariaDB MaxScale database proxy](https://repository-images.githubusercontent.com/558545499/2696d4ed-f270-4ef5-9c97-7516e7ac6f2c)
 
-## Set up the database using Docker
+## Set up the database cluster using Docker
 
 Clone the following repository which contains Docker files to set up MariaDB replication and MaxScale:
 
@@ -31,6 +31,31 @@ Run the containers:
 
 ```
 docker compose up -d
+```
+
+## Create the table
+
+Use the MaxScale GUI to create the table. Go to http://localhost:8989/ and log in using:
+
+* Username: `admin`
+* Password: `mariadb`
+
+In the menu, go to the query editor and connect to the database using:
+
+* Listener name: `query_router_listener`
+* Username: `user`
+* Password: `password`
+
+Run the following SQL statement:
+
+```sql
+CREATE OR REPLACE TABLE person(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    credit_card_number VARCHAR(20),
+    write_server_id INT NOT NULL DEFAULT (@@server_id),
+    read_server_id INT AS (@@server_id) VIRTUAL
+);
 ```
 
 ## Run the web application

@@ -1,6 +1,7 @@
 package com.example.webapp;
 
 import javax.annotation.Nonnull;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,8 +24,10 @@ public class Person {
 
 	private String creditCardNumber;
 
+	@Column(insertable = false, updatable = false)
 	private Integer writeServerId;
 	
+	@Column(insertable = false, updatable = false)
 	private Integer readServerId;
 
 }
