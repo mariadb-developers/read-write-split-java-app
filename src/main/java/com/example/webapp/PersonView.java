@@ -1,6 +1,8 @@
 package com.example.webapp;
 
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import org.vaadin.crudui.crud.CrudOperation;
@@ -8,6 +10,7 @@ import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.layout.impl.HorizontalSplitCrudLayout;
 
 @Route("")
+@PageTitle("MaxScale Demo")
 public class PersonView extends VerticalLayout {
 
 	public PersonView(PersonService service) {
@@ -19,7 +22,7 @@ public class PersonView extends VerticalLayout {
 		crud.getCrudFormFactory().setVisibleProperties(CrudOperation.ADD, "name", "creditCardNumber");
 		crud.getCrudFormFactory().setVisibleProperties(CrudOperation.UPDATE, "name", "creditCardNumber");
 		crud.setSizeFull();
-		add(crud);
+		add(new H2("Person CRUD"), crud);
 		setSizeFull();
 	}
 
