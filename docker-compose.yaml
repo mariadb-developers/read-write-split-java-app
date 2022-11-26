@@ -42,6 +42,7 @@ services:
     ports:
       - 4000:4000
       - 8989:8989
+      - 27017:27017
     networks:
       network:
         ipv4_address: 192.0.0.200
