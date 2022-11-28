@@ -13,6 +13,7 @@ public class PersonView extends VerticalLayout {
 
 	public PersonView(PersonService service) {
 		GridCrud<Person> crud = new GridCrud<>(Person.class, service);
+		crud.setUpdateOperationVisible(false);
 		crud.getGrid().setColumns("name", "creditCardNumber", "writeServerId", "readServerId");
 		crud.getCrudFormFactory().setVisibleProperties("name", "creditCardNumber");
 		crud.setSizeFull();

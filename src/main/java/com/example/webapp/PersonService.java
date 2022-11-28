@@ -2,10 +2,13 @@ package com.example.webapp;
 
 import java.util.Collection;
 
+import javax.transaction.NotSupportedException;
+
 import org.springframework.stereotype.Service;
 import org.vaadin.crudui.crud.CrudListener;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +26,9 @@ public class PersonService implements CrudListener<Person> {
 		return repository.save(person);
 	}
 
-	@Override
+	@SneakyThrows
 	public Person update(Person person) {
-		return repository.save(person);
+		throw new NotSupportedException("Not supported in this demo");
 	}
 
 	@Override
