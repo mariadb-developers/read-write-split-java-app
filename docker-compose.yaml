@@ -1,58 +1,26 @@
 version: "3.9"
 services:
-  mariadb1:
+  mariadb-primary:
     image: alejandrodu/mariadb-primary
-    container_name: mariadb1
-    command: --server_id 1
-    ports:
-      - 3306:3306
-    networks:
-      network:
-        ipv4_address: 192.0.0.10
-  mariadb2:
+
+  mariadb-replica-1:
     image: alejandrodu/mariadb-replica
-    container_name: mariadb2
-    command: --server_id 2
     environment:
-      MARIADB_PRIMARY_HOST: 192.0.0.10
-    ports:
-      - 3307:3306
-    networks:
-      network:
-        ipv4_address: 192.0.0.11
-  mariadb3:
-    container_name: mariadb3
+      MARIADB_PRIMARY_HOST: mariadb-primary
+
+  mariadb-replica-2:
     image: alejandrodu/mariadb-replica
-    command: --server_id 3
     environment:
-      MARIADB_PRIMARY_HOST: 192.0.0.10
-    ports:
-      - 3308:3306
-    networks:
-      network:
-        ipv4_address: 192.0.0.12
+      MARIADB_PRIMARY_HOST: mariadb-primary
+
   maxscale:
     image: alejandrodu/mariadb-maxscale
-    container_name: maxscale
     command: --admin_host 0.0.0.0 --admin_secure_gui false
-    depends_on:
-      - mariadb1
-      - mariadb2
-      - mariadb3
     environment:
-      MARIADB_HOST_1: 192.0.0.10
-      MARIADB_HOST_2: 192.0.0.11
-      MARIADB_HOST_3: 192.0.0.12
+      MARIADB_HOST_1: mariadb-primary
+      MARIADB_HOST_2: mariadb-replica-1
+      MARIADB_HOST_3: mariadb-replica-2
     ports:
       - 4000:4000
       - 8989:8989
       - 27017:27017
-    networks:
-      network:
-        ipv4_address: 192.0.0.200
-networks:
-  network:
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.0.0.0/24

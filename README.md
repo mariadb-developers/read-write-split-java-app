@@ -49,9 +49,7 @@ In the menu, go to the query editor and connect to the database using:
 Run the following SQL statement:
 
 ```sql
-USE demo;
-
-CREATE OR REPLACE TABLE person(
+CREATE OR REPLACE TABLE demo.person(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     credit_card_number VARCHAR(20),
@@ -81,7 +79,7 @@ Run the application:
 java -jar target/webapp.jar
 ```
 
-Access the application in your browser at http://localhost:8080. Insert and update data and refresh the table to see how writes are performed on server ID 1, and reads on server ID 2 and 3. Try enabling **automatic failover** and **auto rejoin**  (in the **mdb_monitor** configuration) and stop the primary node. MaxScale should promote a replica to master and the web application should remain fully functional. If you start the stopped container, it should rejoin the cluster as a replica.
+Access the application in your browser at http://localhost:8080. Insert and update data and refresh the table to see how writes are performed on server ID 1 (primary node), and reads on other servers. Try enabling **automatic failover** and **auto rejoin**  (in the **mdb_monitor** configuration) and stop the primary node. MaxScale should promote a replica to master and the web application should remain fully functional. If you start the stopped container, it should rejoin the cluster as a replica.
 
 To stop the primary node run:
 
