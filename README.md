@@ -9,42 +9,49 @@ primary servers and reads to replicas.
 
 ## Set up the database cluster using Docker
 
-Clone the following repository which contains Docker files to set up MariaDB replication and MaxScale:
+Clone this repository:
 
-```
-git clone https://github.com/alejandro-du/mariadb-docker-deployments.git
-```
-
-Build the images (don't use these in production environments):
-
-```
-cd mariadb-docker-deployments
-docker build --file single-node/Dockerfile --tag alejandrodu/mariadb-single-node .
-docker build --file primary/Dockerfile --tag alejandrodu/mariadb-primary .
-docker build --file replica/Dockerfile --tag alejandrodu/mariadb-replica .
-docker build --file maxscale/Dockerfile --tag alejandrodu/mariadb-maxscale .
+```shell
+git clone https://github.com/mariadb-developers/read-write-split-java-app.git
 ```
 
-Alternatively, you can use the **build.sh** script if you are on Linux.
+The Docker image used in this demo comes from [this GitHub repository](https://github.com/alejandro-du/mariadb-docker-deployments.git). The image is available on DockerHub, so you can simply run the containers using Docker Compose:
 
-Run the containers:
-
-```
+```shell
+# cd read-write-split-java-app
 docker compose up -d
 ```
 
-## Create the table
+Alternatively, you can deploy the MariaDB database cluster on Docker Swarm to distribute the servers on multiple machines:
 
-Use the MaxScale GUI to create the table. Go to http://localhost:8989/ and log in using:
+```shell
+# (optional alternative, run only on a Docker Swarm)
+docker stack deploy -c docker-compose.yaml mariadb
+```
+
+## Configure the database proxy (MariaDB MaxScale)
+
+Access the MaxScale web GUI at http://localhost:8989. Log in using the following credentials:
 
 * Username: `admin`
 * Password: `mariadb`
 
-In the menu, go to the query editor and connect to the database using:
+In the **Dashboard**, click on **mdb_monitor** to access the monitor configuration and enable:
+
+ * **automatic failover**, to automatically promote a a replica as a new primary when the primary fails, and
+ * **auto rejoin**, to make a failed server automatically rejoin the cluster when it recovers
+
+In the **Dashboard**, click **query_router_service** and enable:
+
+ * **transaction reply**, to automatically retry in-flight transactions that might have failed during a failover
+
+## Create the table
+
+Use the MaxScale GUI to create the table. In the main menu, go to **Workspace**, click on **Run Queries**, and connect to the MariaDB database cluster using the following credentials:
 
 * Listener name: `query_router_listener`
 * Username: `user`
-* Password: `password`
+* Password: `Password123!`
 
 Run the following SQL statement:
 
@@ -60,42 +67,40 @@ CREATE OR REPLACE TABLE demo.person(
 
 ## Run the web application
 
-Clone this repository:
-
-```
-git clone https://github.com/mariadb-developers/read-write-split-java-app.git
-```
-
 Build the Java web application using Maven:
 
-```
-cd read-write-split-java-app
+```shell
+# cd read-write-split-java-app
 mvn package
 ```
 
 Run the application:
 
-```
+```shell
 java -jar target/webapp.jar
 ```
 
-Access the application in your browser at http://localhost:8080. Insert and update data and refresh the table to see how writes are performed on server ID 1 (primary node), and reads on other servers. Try enabling **automatic failover** and **auto rejoin**  (in the **mdb_monitor** configuration) and stop the primary node. MaxScale should promote a replica to master and the web application should remain fully functional. If you start the stopped container, it should rejoin the cluster as a replica.
+Access the application in your browser at http://localhost:8080. Insert and update data and refresh the table to see how writes are performed on one server ID (the one corresponding to the primary node), but reads are load-balanced on other servers (replicas).
 
-To stop the primary node run:
+Stop the primary node:
 
+```shell
+docker stop read-write-split-java-app-server-1-1
 ```
-docker stop read-write-split-java-app-mariadb1-1
-```
+
+MaxScale should promote a replica as the new primary and the web application should remain fully functional.
+
+If you start the stopped container, it should rejoin the cluster as a replica.
 
 To start it:
 
-```
-docker start read-write-split-java-app-mariadb1-1
+```shell
+docker start read-write-split-java-app-server-1-1
 ```
 
 To shutdown the database cluster run:
 
-```
+```shell
 docker compose down
 ```
 
