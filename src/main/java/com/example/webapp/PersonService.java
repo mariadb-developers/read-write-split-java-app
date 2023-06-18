@@ -2,11 +2,10 @@ package com.example.webapp;
 
 import java.util.Collection;
 
-import javax.transaction.NotSupportedException;
-
 import org.springframework.stereotype.Service;
 import org.vaadin.crudui.crud.CrudListener;
 
+import jakarta.transaction.NotSupportedException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
