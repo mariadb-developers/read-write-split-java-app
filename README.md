@@ -67,18 +67,14 @@ CREATE OR REPLACE TABLE demo.person(
 
 ## Run the web application
 
-Build the Java web application using Maven:
+Build and run the Java web application using Maven:
 
 ```shell
 # cd read-write-split-java-app
-mvn package
+mvn
 ```
 
-Run the application:
-
-```shell
-java -jar target/webapp.jar
-```
+Alternatively you can build it with `mvn package -P production` and run it with `java -jar target/webapp.jar`.
 
 Access the application in your browser at http://localhost:8080. Insert and update data and refresh the table to see how writes are performed on one server ID (the one corresponding to the primary node), but reads are load-balanced on other servers (replicas).
 
