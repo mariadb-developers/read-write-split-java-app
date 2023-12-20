@@ -22,8 +22,8 @@ services:
     image: alejandrodu/mariadb-maxscale
     command: --admin_host 0.0.0.0 --admin_secure_gui false
     ports:
-      - "3306:4000"
       - "8989:8989"
+      - "3306:4000"
       - "27017:27017"
     environment:
       - MAXSCALE_USER=maxscale_user:MaxScalePassword123!
