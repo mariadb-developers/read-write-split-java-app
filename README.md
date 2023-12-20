@@ -84,6 +84,8 @@ Stop the primary node:
 docker stop read-write-split-java-app-server-1-1
 ```
 
+> **Note:** Remember to configure MaxScale for automatic failover and rejoin!
+
 MaxScale should promote a replica as the new primary and the web application should remain fully functional.
 
 If you start the stopped container, it should rejoin the cluster as a replica.
