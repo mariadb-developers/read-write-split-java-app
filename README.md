@@ -81,7 +81,7 @@ Access the application in your browser at http://localhost:8080. Insert and upda
 Stop the primary node:
 
 ```shell
-docker stop read-write-split-java-app-server-1-1
+docker stop server-1
 ```
 
 > **Note:** Remember to configure MaxScale for automatic failover and rejoin!
@@ -93,7 +93,7 @@ If you start the stopped container, it should rejoin the cluster as a replica.
 To start it:
 
 ```shell
-docker start read-write-split-java-app-server-1-1
+docker start server-1
 ```
 
 To shutdown the database cluster run:
